@@ -1,2 +1,7 @@
-﻿  GameWindow.cpp
+﻿  Card.cpp
+  Fool.cpp
+  LoginWindow.cpp
+C:\Users\Lesha\Desktop\Дурак\Fool\Fool\LoginWindow.cpp(121,81): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\Lesha\Desktop\Дурак\Fool\Fool\LoginWindow.cpp(124,62): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  Создание кода...
   Fool.vcxproj -> C:\Users\Lesha\Desktop\Дурак\Fool\x64\Debug\Fool.exe

@@ -9,10 +9,13 @@ class Card : public Window
 {
 	CardPreset* _cardPreset;
 
-	HMENU _hMenu;
 public:
+	HMENU hMenu;
 
 	Card(Application* app, CardPreset* cardPreset, HWND parent, HMENU hMenu);
+
+	void ShirtUp();
+	void CardUp();
 };
 
 

@@ -1,5 +1,7 @@
 #include "GameWindow.h"
 
+#include <iterator>
+
 #include "Application.h"
 
 GameWindow::GameWindow(Application* app) : Window(app)
@@ -21,11 +23,180 @@ GameWindow::GameWindow(Application* app) : Window(app)
         hInstance,  // Instance handle
         static_cast<LPVOID>(this)
     );
-    for (int i = 0; i < 37; i++) {
-        auto card = new Card(app, &_cardPresets[i], hwnd, (HMENU)3000);
-        card->Show();
-        card->MovePosition(40 * i, 0);
+
+    auto hMenu = 3000;
+    for (int i = 0; i < CARDS_AMOUNT; i++) {
+        _cards.push_back(new Card(app, &_cardPresets[i], hwnd, (HMENU)hMenu++));
     }
+
+    // MoveCardsToDeck(int[] ids)   - придет с сервера
+    std::copy(_cards.begin() + 22, _cards.end(), std::back_inserter(_deck));
+    DrawDeck();
+    
+    std::copy(_cards.begin(), _cards.begin() + 10, std::back_inserter(_cardsOnHand));
+    std::copy(_cards.begin() + 10, _cards.begin() + 20, std::back_inserter(_cardsOnEnemyHand));
+    DrawHand();
+    DrawEnemyHand();
+    _trump = *(_cards.begin() + 21);
+    DrawTrump();
+}
+
+void GameWindow::DrawHand()
+{
+    int amountCardOnHand = _cardsOnHand.size();
+    int cardDistance = GAME_WINDOW_WIDTH / amountCardOnHand;
+    int leftMargin = (cardDistance - CARD_WIDTH) / 2;
+    if (leftMargin < 0)
+        leftMargin = 0;
+
+    Card* card = nullptr;
+	for (int i = 0; i < _cardsOnHand.size(); i++)
+	{
+        card = _cardsOnHand[i];
+
+        card->Show();
+        card->CardUp();
+        card->MovePositionBottom(leftMargin + cardDistance * i, CARDS_HAND_MARGIN);
+	}
+}
+
+void GameWindow::DrawEnemyHand()
+{
+    int amountCardOnHand = _cardsOnEnemyHand.size();
+    int cardDistance = GAME_WINDOW_WIDTH / amountCardOnHand;
+    int leftMargin = (cardDistance - CARD_WIDTH) / 2;
+    if (leftMargin < 0)
+        leftMargin = 0;
+
+    Card* card = nullptr;
+    for (int i = 0; i < _cardsOnEnemyHand.size(); i++)
+    {
+        card = _cardsOnEnemyHand[i];
+
+        card->ShirtUp();
+        card->Show();
+        card->MovePositionBottom(leftMargin + cardDistance * i, CARDS_ENEMY_HAND_MARGIN);
+    }
+}
+
+void GameWindow::DrawHandWithSelectedCard(int cardId)
+{
+    // Подумать над надобностью отрисовки карт с пробелами
+}
+
+void GameWindow::DrawTrump()
+{
+    _trump->CardUp();
+    _trump->Show();
+    _trump->MovePositionTop(TRUMP_MARGIN_LEFT, TRUMP_MARGIN_TOP);
+}
+
+void GameWindow::DrawDeck()
+{
+    for(auto card : _deck)
+    {
+        card->ShirtUp();
+        card->Show();
+        card->MovePositionTop(DECK_MARGIN_LEFT, DECK_MARGIN_TOP);
+    }
+}
+
+bool GameWindow::IsCardInHand(Card* card)
+{
+    if (std::find(_cardsOnHand.begin(), _cardsOnHand.end(), card) != _cardsOnHand.end())
+        return true;
+    else
+        return false;
+}
+
+bool GameWindow::IsCardInEnemyHand(Card* card)
+{
+    if (std::find(_cardsOnEnemyHand.begin(), _cardsOnEnemyHand.end(), card) != _cardsOnEnemyHand.end())
+        return true;
+    else
+        return false;
+}
+
+bool GameWindow::IsCardInDeckHand(Card* card)
+{
+    if (std::find(_deck.begin(), _deck.end(), card) != _deck.end())
+        return true;
+    else
+        return false;
+}
+
+Card* GameWindow::GetCardById(int cardId)
+{
+    for (auto card : _cards)
+        if (card->hMenu == (HMENU)cardId)
+            return card;
+    return nullptr;
+}
+
+void GameWindow::MoveCardFromDeckToHand(Card* card)
+{
+    auto finded = std::find(_deck.begin(), _deck.end(), card);
+    if(finded != _deck.end())
+    {
+        _deck.erase(finded);
+        _cardsOnHand.push_back(card);
+    }
+}
+
+void GameWindow::MoveCardFromDeckToEnemyHand(Card* card)
+{
+    auto finded = std::find(_deck.begin(), _deck.end(), card);
+    if (finded != _deck.end())
+    {
+        _deck.erase(finded);
+        _cardsOnEnemyHand.push_back(card);
+    }
+}
+
+void GameWindow::MoveCardFromHandToBoard(Card* card)
+{
+    auto finded = std::find(_cardsOnHand.begin(), _cardsOnHand.end(), card);
+    if (finded != _cardsOnHand.end())
+    {
+        _cardsOnHand.erase(finded);
+        _cardsOnBoard.push_back(card);
+    }
+}
+
+void GameWindow::MoveCardFromEnemyHandToBoard(Card* card)
+{
+    auto finded = std::find(_cardsOnEnemyHand.begin(), _cardsOnEnemyHand.end(), card);
+    if (finded != _cardsOnEnemyHand.end())
+    {
+        _cardsOnEnemyHand.erase(finded);
+        _cardsOnBoard.push_back(card);
+    }
+}
+
+void GameWindow::MoveCardsFromBoadToHand()
+{
+    // Надо придумать как
+}
+
+void GameWindow::MoveCardsFromBoadToEnemyHand()
+{
+    // Надо придумать как
+}
+
+void GameWindow::MoveCardsFromBoadToQuited()
+{
+    // Надо понять как
+}
+
+void GameWindow::MoveCardsToDeck()
+{
+    _cardsOnHand.clear();
+    _cardsOnEnemyHand.clear();
+    _cardsOnBoard.clear();
+    _quited.clear();
+    _deck.clear();
+
+    std::copy(_cards.begin(), _cards.end(), _deck.begin());
 }
 
 //Square* GameWindow::GetSquareByHMenu(HMENU hMenu)

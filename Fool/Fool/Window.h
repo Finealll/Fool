@@ -16,7 +16,9 @@ public:
 
 	void Show(bool show = true);
 	void Enable(bool enable = true);
-	void MovePosition(int newXPos, int newYPos);
+	void MovePositionBottom(int newXPos, int newYPos);
+	void MovePositionTop(int newXPos, int newYPos);
+	void TransformPosition(int angle);
 
 	HWND GetHwnd() { return hwnd; }
 };
