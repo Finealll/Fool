@@ -13,6 +13,33 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Исходные файлы\Network">
+      <UniqueIdentifier>{268d94c0-49cb-4b30-a816-1d3eecfe87cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Windows">
+      <UniqueIdentifier>{6f132b48-d313-419a-b2db-32ccbee3b7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Network">
+      <UniqueIdentifier>{62c1bf1f-2346-4b11-8d92-fb0269eaa595}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Windows">
+      <UniqueIdentifier>{0be0fb0b-9503-4f9a-8918-0e0037697f41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Cards">
+      <UniqueIdentifier>{a62280ca-e137-4654-b7ea-7223764fd413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Cards">
+      <UniqueIdentifier>{3ce435da-5bf7-43a3-93b6-26575ee84120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Исходные файлы\Windows\Partials">
+      <UniqueIdentifier>{becacd10-40eb-49c1-a705-e6a7dee6060e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Windows\Partials">
+      <UniqueIdentifier>{3118162f-9933-4598-b68e-9cec8968b31a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Файлы заголовков\Defines">
+      <UniqueIdentifier>{62027422-9ee2-421a-9e2c-508446dbfc40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,10 +54,76 @@
     <ClInclude Include="Fool.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Файлы заголовков\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Initializer.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginWindow.h">
+      <Filter>Файлы заголовков\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="WaitingWindow.h">
+      <Filter>Файлы заголовков\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWindow.h">
+      <Filter>Файлы заголовков\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="FoolClient.h">
+      <Filter>Файлы заголовков\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="GameWindowDefines.h">
+      <Filter>Файлы заголовков\Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="CardPreset.h">
+      <Filter>Файлы заголовков\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Card.h">
+      <Filter>Файлы заголовков\Windows\Partials</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fool.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Исходные файлы\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginWindow.cpp">
+      <Filter>Исходные файлы\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="WaitingWindow.cpp">
+      <Filter>Исходные файлы\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="GameWindow.cpp">
+      <Filter>Исходные файлы\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="FoolClient.cpp">
+      <Filter>Исходные файлы\Network</Filter>
+    </ClCompile>
+    <ClCompile Include="Initializer.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="CardPreset.cpp">
+      <Filter>Исходные файлы\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>Исходные файлы\Windows\Partials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,6 +136,117 @@
       <Filter>Файлы ресурсов</Filter>
     </Image>
     <Image Include="Fool.ico">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\1b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\1c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\1k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\1p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\2b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\2c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\2k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\2p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\3b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\3c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\3k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\3p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\4b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\4c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\4k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\4p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\5b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\5c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\5k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\5p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\6b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\6c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\6k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\6p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\7b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\7c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\7k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\7p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\8b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\8c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\8k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\8p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\9b.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\9c.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\9k.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\9p.bmp">
+      <Filter>Файлы ресурсов</Filter>
+    </Image>
+    <Image Include="Resources\Cards\rubashka.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>

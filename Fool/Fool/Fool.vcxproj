@@ -139,19 +139,78 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="CardPreset.h" />
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Fool.h" />
+    <ClInclude Include="FoolClient.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GameWindow.h" />
+    <ClInclude Include="GameWindowDefines.h" />
+    <ClInclude Include="Global.h" />
+    <ClInclude Include="Initializer.h" />
+    <ClInclude Include="LoginWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="WaitingWindow.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CardPreset.cpp" />
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Fool.cpp" />
+    <ClCompile Include="FoolClient.cpp" />
+    <ClCompile Include="GameWindow.cpp" />
+    <ClCompile Include="Initializer.cpp" />
+    <ClCompile Include="LoginWindow.cpp" />
+    <ClCompile Include="WaitingWindow.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Fool.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Fool.ico" />
+    <Image Include="Resources\Cards\1b.bmp" />
+    <Image Include="Resources\Cards\1c.bmp" />
+    <Image Include="Resources\Cards\1k.bmp" />
+    <Image Include="Resources\Cards\1p.bmp" />
+    <Image Include="Resources\Cards\2b.bmp" />
+    <Image Include="Resources\Cards\2c.bmp" />
+    <Image Include="Resources\Cards\2k.bmp" />
+    <Image Include="Resources\Cards\2p.bmp" />
+    <Image Include="Resources\Cards\3b.bmp" />
+    <Image Include="Resources\Cards\3c.bmp" />
+    <Image Include="Resources\Cards\3k.bmp" />
+    <Image Include="Resources\Cards\3p.bmp" />
+    <Image Include="Resources\Cards\4b.bmp" />
+    <Image Include="Resources\Cards\4c.bmp" />
+    <Image Include="Resources\Cards\4k.bmp" />
+    <Image Include="Resources\Cards\4p.bmp" />
+    <Image Include="Resources\Cards\5b.bmp" />
+    <Image Include="Resources\Cards\5c.bmp" />
+    <Image Include="Resources\Cards\5k.bmp" />
+    <Image Include="Resources\Cards\5p.bmp" />
+    <Image Include="Resources\Cards\6b.bmp" />
+    <Image Include="Resources\Cards\6c.bmp" />
+    <Image Include="Resources\Cards\6k.bmp" />
+    <Image Include="Resources\Cards\6p.bmp" />
+    <Image Include="Resources\Cards\7b.bmp" />
+    <Image Include="Resources\Cards\7c.bmp" />
+    <Image Include="Resources\Cards\7k.bmp" />
+    <Image Include="Resources\Cards\7p.bmp" />
+    <Image Include="Resources\Cards\8b.bmp" />
+    <Image Include="Resources\Cards\8c.bmp" />
+    <Image Include="Resources\Cards\8k.bmp" />
+    <Image Include="Resources\Cards\8p.bmp" />
+    <Image Include="Resources\Cards\9b.bmp" />
+    <Image Include="Resources\Cards\9c.bmp" />
+    <Image Include="Resources\Cards\9k.bmp" />
+    <Image Include="Resources\Cards\9p.bmp" />
+    <Image Include="Resources\Cards\rubashka.bmp" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
