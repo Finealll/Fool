@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CardOnBoard.h" />
     <ClInclude Include="CardPreset.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Client.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CardOnBoard.cpp" />
     <ClCompile Include="CardPreset.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Client.cpp" />

@@ -3,7 +3,7 @@
 Card::Card(Application* app, CardPreset* cardPreset, HWND parent, HMENU hMenu) : Window(app)
 {
 	_cardPreset = cardPreset;
-    hMenu = hMenu;
+    this->hMenu = hMenu;
 
     this->hwnd = CreateWindowEx(
         0,

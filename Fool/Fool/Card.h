@@ -16,6 +16,8 @@ public:
 
 	void ShirtUp();
 	void CardUp();
+
+	CardPreset* GetCardPreset() { return _cardPreset; }
 };
 
 

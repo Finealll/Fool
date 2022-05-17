@@ -90,6 +90,9 @@
     <ClInclude Include="Card.h">
       <Filter>Файлы заголовков\Windows\Partials</Filter>
     </ClInclude>
+    <ClInclude Include="CardOnBoard.h">
+      <Filter>Файлы заголовков\Cards</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fool.cpp">
@@ -124,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="Card.cpp">
       <Filter>Исходные файлы\Windows\Partials</Filter>
+    </ClCompile>
+    <ClCompile Include="CardOnBoard.cpp">
+      <Filter>Исходные файлы\Cards</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
