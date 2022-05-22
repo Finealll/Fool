@@ -38,7 +38,7 @@ GameWindow::GameWindow(Application* app) : Window(app)
         0
     );
 
-    this->_hBitoButton = CreateWindowEx(
+    this->_hTakeButton = CreateWindowEx(
         0,
         L"BUTTON",
         L"Взять",
@@ -53,50 +53,28 @@ GameWindow::GameWindow(Application* app) : Window(app)
 
     auto hMenu = 3000;
     for (int i = 0; i < CARDS_AMOUNT; i++) {
-        _cards.push_back(new Card(app, &_cardPresets[i], hwnd, (HMENU)hMenu++));
+        _cards.push_back(new Card(app, &_cardPresets[i], hwnd, (HMENU)hMenu));
+        _cardHits[i] = CreateWindowEx(
+            0,
+            L"BUTTON",
+            L"+",
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+
+            0, 0, CARD_WIDTH, CARD_HEIGHT,
+            hwnd,
+            (HMENU)(hMenu + 400),
+            GetModuleHandleA(NULL),
+            0
+        );
+        ShowWindow(_cardHits[i], false);
+        hMenu++;
     }
-
-    // MoveCardsToDeck(int[] ids)   - придет с сервера
-    std::copy(_cards.begin(), _cards.end(), std::back_inserter(_deck));
-    DrawDeck();
-    _trump = *(_cards.end()-1);
-    DrawTrump();
-
-    //test
-
-    /*_cardsOnHand.push_back(*(_cards.begin() + 10));
-    _cardsOnHand.push_back(*(_cards.begin() + 11));
-    _cardsOnHand.push_back(*(_cards.begin() + 12));
-    _cardsOnEnemyHand.push_back(*(_cards.begin() + 13));
-    _cardsOnEnemyHand.push_back(*(_cards.begin() + 14));
-    _cardsOnEnemyHand.push_back(*(_cards.begin() + 15));
-
-    _quited.push_back(*(_cards.begin() + 20));
-    _quited.push_back(*(_cards.begin() + 21));
-
-    _cardsOnBoardWrap.push_back(new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, _cards[0]));
-    _cardsOnBoardWrap.push_back(new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, _cards[1]));
-    _cardsOnBoardWrap.back()->SetHittingCard(_cards[25]);
-    _cardsOnBoardWrap.push_back(new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, _cards[2]));
-    _cardsOnBoardWrap.back()->SetHittingCard(_cards[26]);
-    _cardsOnBoardWrap.push_back(new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, _cards[3]));
-    _cardsOnBoardWrap.back()->SetHittingCard(_cards[27]);
-    _cardsOnBoardWrap.push_back(new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, _cards[4]));
-    _cardsOnBoardWrap.push_back(new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, _cards[5]));
-
-    _deck.push_back(_cards[34]);
-    DrawHand();
-    DrawEnemyHand();
-    DrawQuited();
-    DrawBoard();
-    DrawDeck();*/
-    //----------------------------
 }
 
 void GameWindow::DrawHand()
 {
     int amountCardOnHand = _cardsOnHand.size();
-    int cardDistance = GAME_WINDOW_WIDTH / amountCardOnHand;
+    int cardDistance = amountCardOnHand != 0 ? GAME_WINDOW_WIDTH / amountCardOnHand : 0;
     int leftMargin = (cardDistance - CARD_WIDTH) / 2;
     if (leftMargin < 0)
         leftMargin = 0;
@@ -115,7 +93,7 @@ void GameWindow::DrawHand()
 void GameWindow::DrawEnemyHand()
 {
     int amountCardOnHand = _cardsOnEnemyHand.size();
-    int cardDistance = GAME_WINDOW_WIDTH / amountCardOnHand;
+    int cardDistance = amountCardOnHand == 0 ? 0 : GAME_WINDOW_WIDTH / amountCardOnHand;
     int leftMargin = (cardDistance - CARD_WIDTH) / 2;
     if (leftMargin < 0)
         leftMargin = 0;
@@ -127,24 +105,26 @@ void GameWindow::DrawEnemyHand()
 
         card->ShirtUp();
         card->Show();
-        card->MovePositionBottom(leftMargin + cardDistance * i, CARDS_ENEMY_HAND_MARGIN);
+        card->MovePositionTop(leftMargin + cardDistance * i, CARDS_ENEMY_HAND_MARGIN);
     }
 }
 
 void GameWindow::DrawTrump()
 {
-    _trump->CardUp();
-    _trump->Show();
-    _trump->MovePositionTop(TRUMP_MARGIN_LEFT, TRUMP_MARGIN_TOP);
+    if (IsCardInDeck(_trump)) {
+        _trump->CardUp();
+        _trump->Show();
+        _trump->MovePositionTop(TRUMP_MARGIN_LEFT, TRUMP_MARGIN_TOP);
+    }
 }
 
 void GameWindow::DrawDeck()
 {
-    for(auto card : _deck)
+    for(int i = 0; i < _deck.size()-1; i++)
     {
-        card->ShirtUp();
-        card->Show();
-        card->MovePositionBottom(DECK_MARGIN_LEFT, DECK_MARGIN_TOP);
+        _deck[i]->ShirtUp();
+        _deck[i]->Show();
+        _deck[i]->MovePositionBottom(DECK_MARGIN_LEFT, DECK_MARGIN_TOP);
     }
 }
 
@@ -166,15 +146,55 @@ void GameWindow::DrawBoard()
 	    {
             int offsetX = CARD_BOARD_MARGIN_LEFT + i * (CARD_BOARD_DISTANSE + CARD_WIDTH);
             _cardsOnBoardWrap[i]->MovePosition(offsetX, CARD_BOARD_MARGIN_TOP_FIRST);
+            _cardsOnBoardWrap[i]->GetCard()->CardUp();
+            if(_cardsOnBoardWrap[i]->GetHittingCard() != nullptr)
+                _cardsOnBoardWrap[i]->GetHittingCard()->CardUp();
             _cardsOnBoardWrap[i]->Show();
 	    }else
 	    {
             int offsetX = CARD_BOARD_MARGIN_LEFT + (i-3) * (CARD_BOARD_DISTANSE + CARD_WIDTH);
             _cardsOnBoardWrap[i]->MovePosition(offsetX, CARD_BOARD_MARGIN_TOP_SECOND);
+            _cardsOnBoardWrap[i]->GetCard()->CardUp();
+            if (_cardsOnBoardWrap[i]->GetHittingCard() != nullptr)
+                _cardsOnBoardWrap[i]->GetHittingCard()->CardUp();
             _cardsOnBoardWrap[i]->Show();
 	    }
+        _cardsOnBoardWrap[i]->DeleteHitPrevies();
     }
 }
+
+void GameWindow::DrawHittedPreview(Card* card)
+{
+    ClearHittedPreviews();
+    for(auto cardWrap : _cardsOnBoardWrap)
+    {
+        if(cardWrap->CheckPossibilityToHit(card))
+        {
+            cardWrap->CreateHitPrevies(card, true);
+        }
+    }
+}
+
+void GameWindow::DrawHiddenHittedPreview(Card* card)
+{
+    ClearHittedPreviews();
+    for (auto cardWrap : _cardsOnBoardWrap)
+    {
+        if (cardWrap->CheckPossibilityToHit(card))
+        {
+            cardWrap->CreateHitPrevies(card, false);
+        }
+    }
+}
+
+void GameWindow::ClearHittedPreviews()
+{
+	for(auto cardWraps : _cardsOnBoardWrap)
+	{
+        cardWraps->DeleteHitPrevies();
+	}
+}
+
 
 bool GameWindow::IsCardInHand(Card* card)
 {
@@ -216,11 +236,25 @@ Card* GameWindow::GetCardById(int cardId)
     return nullptr;
 }
 
+CardOnBoard* GameWindow::GetCardBoardByCard(Card* card)
+{
+    for (auto cardWrap : _cardsOnBoardWrap)
+        if (cardWrap->GetCard() == card)
+            return cardWrap;
+    return nullptr;
+}
+
+HWND GameWindow::GetCardHitHWNDByHMenu(int hMenu)
+{
+    return _cardHits[hMenu - 3000];
+}
+
 void GameWindow::MoveCardFromDeckToHand(Card* card)
 {
     auto finded = std::find(_deck.begin(), _deck.end(), card);
     if(finded != _deck.end())
     {
+        (*finded)->Show(false);
         _deck.erase(finded);
         _cardsOnHand.push_back(card);
     }
@@ -231,6 +265,7 @@ void GameWindow::MoveCardFromDeckToEnemyHand(Card* card)
     auto finded = std::find(_deck.begin(), _deck.end(), card);
     if (finded != _deck.end())
     {
+        (*finded)->Show(false);
         _deck.erase(finded);
         _cardsOnEnemyHand.push_back(card);
     }
@@ -242,10 +277,11 @@ void GameWindow::MoveCardFromHandToBoard(Card* card)
     if (finded != _cardsOnHand.end())
     {
         if (CheckPossibilityToAddCardToBoard(card)) {
+            (*finded)->Show(false);
             _cardsOnHand.erase(finded);
             _cardsOnBoard.push_back(card);
 
-            auto addedCardWrap = new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, card);
+            auto addedCardWrap = new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, card, GetCardHitHWNDByHMenu((int)card->hMenu));
             _cardsOnBoardWrap.push_back(addedCardWrap);
         }
     }
@@ -257,13 +293,15 @@ void GameWindow::MoveCardFromEnemyHandToBoard(Card* card)
     if (finded != _cardsOnEnemyHand.end())
     {
         if (CheckPossibilityToAddCardToBoard(card)) {
+            card->Show(false);
             _cardsOnEnemyHand.erase(finded);
             _cardsOnBoard.push_back(card);
 
-            auto addedCardWrap = new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, card);
+            auto addedCardWrap = new CardOnBoard(this, _trump->GetCardPreset()->CardSuit, card, GetCardHitHWNDByHMenu((int)card->hMenu));
             _cardsOnBoardWrap.push_back(addedCardWrap);
         }
     }
+    
 }
 
 void GameWindow::MoveCardFromHandToHit(Card* card, CardOnBoard* cardWrap){
@@ -294,21 +332,21 @@ void GameWindow::MoveCardFromEnemyHandToHit(Card* card, CardOnBoard* cardWrap) {
 
 void GameWindow::MoveCardsFromBoadToHand()
 {
-    std::copy(_cardsOnBoard.begin(), _cardsOnBoard.end(), _cardsOnHand.end());
+    std::copy(_cardsOnBoard.begin(), _cardsOnBoard.end(), std::back_inserter(_cardsOnHand));
     _cardsOnBoardWrap.clear();
     _cardsOnBoard.clear();
 }
 
 void GameWindow::MoveCardsFromBoadToEnemyHand()
 {
-    std::copy(_cardsOnBoard.begin(), _cardsOnBoard.end(), _cardsOnEnemyHand.end());
+    std::copy(_cardsOnBoard.begin(), _cardsOnBoard.end(), std::back_inserter(_cardsOnEnemyHand));
     _cardsOnBoardWrap.clear();
     _cardsOnBoard.clear();
 }
 
 void GameWindow::MoveCardsFromBoadToQuited()
 {
-    std::copy(_cardsOnBoard.begin(), _cardsOnBoard.end(), _quited.end());
+    std::copy(_cardsOnBoard.begin(), _cardsOnBoard.end(), std::back_inserter(_quited));
     _cardsOnBoardWrap.clear();
     _cardsOnBoard.clear();
 }
@@ -344,6 +382,8 @@ bool GameWindow::CheckPossibilityToAddCardToBoard(Card* card)
     bool retVal = false;
     if (_cardsOnBoardWrap.size() == 0)
         retVal = true;
+    else if (_cardsOnBoardWrap.size() == 6)
+        retVal = false;
     else
     {
         for(auto cardWrap : _cardsOnBoardWrap)
@@ -360,155 +400,47 @@ bool GameWindow::CheckPossibilityToAddCardToBoard(Card* card)
     return retVal;
 }
 
-//Square* GameWindow::GetSquareByHMenu(HMENU hMenu)
-//{
-//    for (int i = 0; i < FIGURES_ROWS; i++)
-//        for (int j = 0; j < FIGURES_COLS; j++)
-//            if (_squares[i][j] != nullptr && _squares[i][j]->hMenu == hMenu)
-//                return _squares[i][j];
-//    return nullptr;
-//}
-//
-//Figure* GameWindow::CreateFigureByXY(int x, int y, FigureType type)
-//{
-//    if (type == X) {
-//        _figures[x][y]->MakeX();
-//    }
-//    else {
-//        _figures[x][y]->MakeO();
-//    }
-//
-//    return _figures[x][y];
-//}
-//
-//void GameWindow::ClickSquare(int x, int y, FigureType type)
-//{
-//    CreateFigureByXY(x, y, type)->Show();
-//    _squares[x][y]->Show(false);
-//    ToggleStep();
-//}
-//
-//void GameWindow::EnableSquares(bool enable)
-//{
-//    for (int i = 0; i < FIGURES_ROWS; i++)
-//        for (int j = 0; j < FIGURES_COLS; j++)
-//            _squares[i][j]->Enable(enable);
-//}
-//
-//void GameWindow::ToggleStep()
-//{
-//    wchar_t buff[100] = L"Противник - ";
-//    wcscat(buff, enemyName);
-//
-//    if (currentPlayer == ME) {
-//        wcscat(buff, L". Ваш ход.");
-//        EnableSquares(true);
-//        currentPlayer = ENEMY;
-//    }
-//    else {
-//        wcscat(buff, L". Ход противника.");
-//        EnableSquares(false);
-//        currentPlayer = ME;
-//    }
-//
-//    SetWindowText(hwnd, buff);
-//}
-//
-//void GameWindow::StartGame(FigureType type, wchar_t* enemyName)
-//{
-//    for (int i = 0; i < FIGURES_ROWS; i++)
-//        for (int j = 0; j < FIGURES_COLS; j++)
-//        {
-//            _figures[i][j]->type = UNKNOWN;
-//            _figures[i][j]->Show(false);
-//            _squares[i][j]->Show(true);
-//        }
-//
-//    wcscpy(this->enemyName, enemyName);
-//    playerFigure = type;
-//    currentPlayer = type == X ? ME : ENEMY;
-//
-//    ToggleStep();
-//}
-//
-//void GameWindow::EndGame(wchar_t* message)
-//{
-//    MessageBox(0, message, MB_OK, 0);
-//    App->Start();
-//}
+void GameWindow::MoveHandCardToWrapper(Card* card, CardOnBoard* cardOnBoard)
+{
+    auto finded = std::find(_cardsOnHand.begin(), _cardsOnHand.end(), card);
+    if (finded != _cardsOnHand.end())
+    {
+        cardOnBoard->SetHittingCard(card);
+        _cardsOnHand.erase(finded);
+        _cardsOnBoard.push_back(card);
+    }
+}
 
-//bool GameWindow::CheckWin(int len = 5)
-//{
-//    for (int i = 0; i < FIGURES_ROWS; i++)
-//    {
-//        for (int j = 0; j < FIGURES_COLS; j++)
-//        {
-//            // Проверка на len вправо
-//            if (len + j <= FIGURES_COLS)
-//            {
-//                bool isWin = true;
-//                for (int k = j; k < j + len; k++)
-//                    if (_figures[i][k]->type != playerFigure)
-//                    {
-//                        isWin = false;
-//                        break;
-//                    }
-//                if (isWin) return true;
-//            }
-//
-//            // Проверка на len вниз
-//            if (len + i <= FIGURES_ROWS)
-//            {
-//                bool isWin = true;
-//                for (int k = i; k < i + len; k++)
-//                    if (_figures[k][j]->type != playerFigure)
-//                    {
-//                        isWin = false;
-//                        break;
-//                    }
-//                if (isWin) return true;
-//            }
-//
-//            // Проверка на len по диагонали вправо вниз
-//            if (len + i <= FIGURES_ROWS && len + j <= FIGURES_COLS)
-//            {
-//                bool isWin = true;
-//                for (int k = i; k < i + len; k++)
-//                    if (_figures[k][k]->type != playerFigure)
-//                    {
-//                        isWin = false;
-//                        break;
-//                    }
-//                if (isWin) return true;
-//            }
-//
-//            // Проверка на len по диагонали влево вниз
-//            if (len + i <= FIGURES_ROWS && j - len >= -1)
-//            {
-//                bool isWin = true;
-//                for (int k = j, x = i; k > j - len && x < i + len; k--, x++)
-//                    if (_figures[x][k]->type != playerFigure)
-//                    {
-//                        isWin = false;
-//                        break;
-//                    }
-//                if (isWin) return true;
-//            }
-//
-//        }
-//    }
-//
-//    return false;
-//}
-//
-//bool GameWindow::CheckDraw()
-//{
-//    for (int i = 0; i < FIGURES_ROWS; i++)
-//        for (int j = 0; j < FIGURES_COLS; j++)
-//            if (_figures[i][j]->type != UNKNOWN)
-//                return false;
-//    return true;
-//}
+void GameWindow::MoveEnemyHandCardToWrapper(Card* card, CardOnBoard* cardOnBoard)
+{
+    auto finded = std::find(_cardsOnEnemyHand.begin(), _cardsOnEnemyHand.end(), card);
+    if (finded != _cardsOnEnemyHand.end())
+    {
+        cardOnBoard->SetHittingCard(card);
+        _cardsOnEnemyHand.erase(finded);
+        _cardsOnBoard.push_back(card);
+    }
+}
+
+
+bool GameWindow::CheckPossibilityToHitCard(Card* card)
+{
+    bool retVal = false;
+    if (_cardsOnBoardWrap.size() == 0)
+        retVal = false;
+    else
+    {
+        for (auto cardWrap : _cardsOnBoardWrap)
+        {
+            if(cardWrap->GetHittingCard() == nullptr && cardWrap->CheckPossibilityToHit(card))
+            {
+                retVal = true;
+                break;
+            }
+        }
+    }
+    return retVal;
+}
 
 LRESULT CALLBACK GameWindow::GameWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -528,6 +460,8 @@ LRESULT CALLBACK GameWindow::GameWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam,
         int wmId = LOWORD(wParam);      //Id окна, вызвавшее событие
         int wmEvent = HIWORD(wParam);       //Id события
 
+        bool stepPosibility = (game->currentPlayer == game->WhoI);
+
         if (wmId >= 3000 && wmId < 3037)
         {
             Card* card = game->GetCardById(wmId);
@@ -541,22 +475,81 @@ LRESULT CALLBACK GameWindow::GameWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam,
 
             bool IsDeckSizeEqualsOne = game->GetDeckSize() == 1;
 
-            if((IsCardInDeck && !IsCardBeTrumpCard) || (IsCardInDeck && IsCardBeTrumpCard && IsDeckSizeEqualsOne))
-            {
-                game->MoveCardFromDeckToHand(card);
-                game->DrawHand();
-            } else if(IsCardInHand) {
-                if(game->CheckPossibilityToAddCardToBoard(card))
+            if (stepPosibility && IsCardInHand) {
+                if (game->CheckPossibilityToAddCardToBoard(card))
                 {
                     game->MoveCardFromHandToBoard(card);
                     game->DrawBoard();
                     game->DrawHand();
+                    game->App->GetClient()->EnemyCardToBoard(wmId);
+
+                    if(game->CheckWin())
+                    {
+                        game->EndGame((wchar_t*)L"Вы выиграли!");
+                        game->App->GetClient()->LoseGame();
+                    }
                 }
             }
+            else if (!stepPosibility){
+                game->ClearHittedPreviews();
+                if (game->CheckPossibilityToHitCard(card)) {
+                    game->DrawBoard();
+                    game->DrawHittedPreview(card);
+                }
+                game->App->GetClient()->EnemyDrawCardHitsPrevies(wmId);
+            }
+        	else if(IsCardInEnemyHand){}
 
-            if(IsCardInHand)
+           
+	            
 
+        } else if ((wmId >= 3000 + 400) && (wmId < 3037 + 400))
+        {
+            Card* card = game->GetCardById(wmId - 400);
+            CardOnBoard* cardOnBoard = game->GetCardBoardByCard(card);
+
+            Card* hittingCard = cardOnBoard->GetHittingCardPreview();
+
+            game->MoveHandCardToWrapper(hittingCard, cardOnBoard);
+            game->DrawBoard();
+            game->DrawHand();
+            game->App->GetClient()->EnemyHitCard((int)card->hMenu, (int)hittingCard->hMenu);
+
+            if (game->CheckWin())
+            {
+                game->EndGame((wchar_t*)L"Вы выиграли!");
+                game->App->GetClient()->LoseGame();
+            }
+        } else if(wmId == BITO_HMENU && stepPosibility)
+        {
+            if ( game->CheckBito()) {
+                game->MoveCardsFromBoadToQuited();
+                game->DrawQuited();
+                game->DrawBoard();
+                game->App->GetClient()->Bito();
+
+                game->PeekCardsToEnemyHand();
+                game->PeekCardsToHand();
+                game->DrawHand();
+                game->DrawEnemyHand();
+
+                game->ToggleStep();
+            }
         }
+        else if (wmId == TAKE_HMENU && !stepPosibility)
+        {
+            game->MoveCardsFromBoadToHand();
+            game->DrawHand();
+            game->DrawBoard();
+            game->App->GetClient()->EnemyGiveCards();
+
+
+            game->PeekCardsToEnemyHand();
+            game->DrawHand();
+            game->DrawEnemyHand();
+        }
+        
+        
         return 0;
     }
     case WM_PAINT:
@@ -591,6 +584,8 @@ LRESULT CALLBACK GameWindow::GameWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam,
         TextOut(hdc01, 820, 150, L"Колода", wcslen(L"Колода"));
 
         EndPaint(hwnd, &ps01);
+
+        return 0;
     }
     }
 
@@ -606,4 +601,144 @@ void GameWindow::RegisterWnd()
     wc.lpszClassName = GAME_WINDOW_CLASS_NAME;
 
     RegisterClass(&wc);
+}
+
+bool GameWindow::CheckBito()
+{
+    bool retVal = true;
+    if (_cardsOnBoard.size() == 0)
+        retVal = false;
+    else {
+        for (auto cardWrap : _cardsOnBoardWrap)
+        {
+            if (!cardWrap->IsHitted())
+            {
+                retVal = false;
+                break;
+            }
+        }
+    }
+    return retVal;
+}
+
+void GameWindow::PeekCardsToHand()
+{
+    for(int i = _cardsOnHand.size(); i < 6; i++)
+    {
+        if (!_deck.empty())
+			MoveCardFromDeckToHand(_deck.front());
+    }
+}
+
+void GameWindow::PeekCardsToEnemyHand()
+{
+    for (int i = _cardsOnEnemyHand.size(); i < 6; i++)
+    {
+        if(!_deck.empty())
+			MoveCardFromDeckToEnemyHand(_deck.front());
+    }
+}
+
+void GameWindow::EndGame(wchar_t* message)
+{
+    MessageBox(hwnd, message, L"Сообщение", 0);
+    App->Login();
+}
+
+void GameWindow::ToggleStep()
+{
+    if(currentPlayer == ME)
+    {
+        currentPlayer = ENEMY;
+    } else
+    {
+        currentPlayer = ME;
+    }
+
+    wchar_t title[100]{};
+    wcscat_s(title, L"Противник: ");
+    wcscat_s(title, enemyName);
+    if ((currentPlayer == WhoI))
+        wcscat_s(title, L", ваш ход");
+    else
+        wcscat_s(title, L", ход противника");
+    SetWindowText(hwnd, title);
+}
+
+void GameWindow::StartGame(int cards[], wchar_t* enemyName, bool isFirst)
+{
+	wcscpy_s(this->enemyName, enemyName);
+
+    wchar_t title[100]{};
+    wcscat_s(title, L"Противник: ");
+    wcscat_s(title, enemyName);
+    if(isFirst)
+        wcscat_s(title, L", ваш ход");
+    else
+        wcscat_s(title, L", ход противника");
+    SetWindowText(hwnd, title);
+
+    _deck.clear();
+    _cardsOnBoardWrap.clear();
+    _cardsOnHand.clear();
+    _cardsOnEnemyHand.clear();
+    _cardsOnBoard.clear();
+    _quited.clear();
+
+    currentPlayer = ME;
+    WhoI = isFirst ? ME : ENEMY;
+
+    for(int i = 0; i < 36; i++)
+    {
+        Card* card = nullptr;
+        for(Card* cardIter : this->_cards)
+        {
+	        if(cardIter -> GetCardPreset()->SystemNumber == cards[i])
+	        {
+                _deck.push_back(cardIter);
+                cardIter->ShirtUp();
+                break;
+	        }
+        }
+    }
+    if (isFirst)
+    {
+        for(int i = 0; i < 6; i++)
+        {
+            MoveCardFromDeckToHand(_deck.front());
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            MoveCardFromDeckToEnemyHand(_deck.front());
+        }
+    } else
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            MoveCardFromDeckToEnemyHand(_deck.front());
+        }
+        for (int i = 0; i < 6; i++)
+        {
+            MoveCardFromDeckToHand(_deck.front());
+        }
+    }
+
+    _trump = _deck.back();
+
+    DrawTrump();
+    DrawDeck();
+    DrawHand();
+    DrawEnemyHand();
+    DrawQuited();
+}
+
+bool GameWindow::CheckWin()
+{
+    bool retVal = false;
+    bool stepPosibility = (currentPlayer == WhoI);
+    if (_deck.size() == 0 && _cardsOnHand.size() == 0)
+        retVal = true;
+    else
+        retVal = false;
+    return retVal;
 }

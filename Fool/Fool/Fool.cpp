@@ -14,9 +14,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     Init();        // Инитим классы окон
 
     const auto app = new Application();        // Запускаем приложение
-    app->GetLoginWindow()->Show();
-    app->GetWaitingWindow()->Show();
-    app->GetGameWindow()->Show();
+    app->GetConnectionWindow()->Show();
 
     MSG msg;
     while (GetMessage(&msg, nullptr, 0, 0))

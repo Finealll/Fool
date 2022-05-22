@@ -36,16 +36,17 @@ private:
 
 	std::vector<CardOnBoard*> _cardsOnBoardWrap;
 
+	HWND _cardHits[36];
+
 	Card* _trump;
 
 	HWND _hBitoButton;
 	HWND _hTakeButton;
-	//Square* _squares[FIGURES_ROWS][FIGURES_COLS];
-	//Figure* _figures[FIGURES_ROWS][FIGURES_COLS];
 	
 public:
 	//FigureType playerFigure;
 	Player currentPlayer;
+	Player WhoI;
 	wchar_t enemyName[INPUTNAMELENGTH];
 
 	GameWindow(Application* app);
@@ -60,6 +61,9 @@ public:
 	void DrawQuited();
 
 	void DrawBoard();
+	void DrawHittedPreview(Card* card);
+	void DrawHiddenHittedPreview(Card* card);
+	void ClearHittedPreviews();
 	//-----------------------------------------------
 
 	// Проверка на нахождение карт в векторах -------
@@ -73,6 +77,8 @@ public:
 	// Получение карты по hMenu
 public:
 	Card* GetCardById(int cardId);
+	CardOnBoard* GetCardBoardByCard(Card* board);
+	HWND GetCardHitHWNDByHMenu(int hMenu);
 
 	// Получение размеров векторов -----------------
 public:
@@ -95,6 +101,9 @@ public:
 	void MoveCardsFromBoadToQuited();
 
 	void MoveCardsToDeck();
+
+	void MoveHandCardToWrapper(Card* card, CardOnBoard* cardOnBoard);
+	void MoveEnemyHandCardToWrapper(Card* card, CardOnBoard* cardOnBoard);
 	// ----------------------------------------------
 
 	// Сортировка карт в векторах -------------------
@@ -108,9 +117,19 @@ public:
 	// Работа с игровым столом
 public:
 	bool CheckPossibilityToAddCardToBoard(Card* card);
+	bool CheckPossibilityToHitCard(Card* card);
+	bool CheckBito();
+	void PeekCardsToHand();
+	void PeekCardsToEnemyHand();
 	//-----------------------------------------------
 
+	// Игровой процесс-------------------------------
 
+	void StartGame(int cards[], wchar_t* enemyName, bool isFirst);
+	bool CheckWin();
+	void EndGame(wchar_t* message);
+	void ToggleStep();
+	//-----------------------------------------------
 	//Square* GetSquareByHMenu(HMENU hMenu);
 
 	//Figure* CreateFigureByXY(int x, int y, FigureType type);
@@ -118,8 +137,6 @@ public:
 	//void EnableSquares(bool enable);
 	//void ToggleStep();
 
-	//void StartGame(FigureType type, wchar_t* enemyName);
-	//void EndGame(wchar_t* message);
 
 	//bool CheckWin(int len);
 	//bool CheckDraw();

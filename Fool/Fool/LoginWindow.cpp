@@ -81,7 +81,7 @@ LRESULT CALLBACK LoginWindow::LoginWindowProc(HWND hwnd, UINT uMsg, WPARAM wPara
         {
             wchar_t name[INPUT_NAME_LENGTH];
             GetWindowText(landing->_editHWND, name, INPUT_NAME_LENGTH);
-            //landing->App->GetClient()->LoginUser(name);
+            landing->App->GetClient()->LoginUser(name);
         }
         return 1;
     }

@@ -93,6 +93,9 @@
     <ClInclude Include="CardOnBoard.h">
       <Filter>Файлы заголовков\Cards</Filter>
     </ClInclude>
+    <ClInclude Include="ConnectionWindow.h">
+      <Filter>Файлы заголовков\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fool.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="CardOnBoard.cpp">
       <Filter>Исходные файлы\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionWindow.cpp">
+      <Filter>Исходные файлы\Windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

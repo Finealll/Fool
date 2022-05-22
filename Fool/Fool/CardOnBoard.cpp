@@ -1,10 +1,14 @@
 #include "CardOnBoard.h"
 
-CardOnBoard::CardOnBoard(GameWindow* gameWindow, CARD_SUIT trump, Card* settedCard)
+#include "GameWindow.h"
+
+CardOnBoard::CardOnBoard(GameWindow* gameWindow, CARD_SUIT trump, Card* settedCard, HWND cardHitHwnd)
 {
 	_gameWindow = gameWindow;
 	_trump = trump;
 	_card = settedCard;
+
+	_hitPreviewHwnd = cardHitHwnd;
 }
 
 void CardOnBoard::ClearCards()
@@ -22,11 +26,15 @@ bool CardOnBoard::CheckPossibilityToHit(Card* hittedCard)
 	bool isHittedCardTrump = (hittedCardPreset->CardSuit == _trump);
 
 	bool retValue = false;
+	if(_hittingCard != nullptr)
+	{
+		retValue = false;
+	}
 	// Если карта, которую бьем - козырь
-	if (isCardTrump) 
+	else if (isCardTrump) 
 	{
 		if(isHittedCardTrump && 
-			(cardPreset->CardNumber < hittedCardPreset->CardDefineId))
+			(cardPreset->CardNumber < hittedCardPreset->CardNumber))
 		{
 			retValue = true;
 		} else
@@ -38,7 +46,7 @@ bool CardOnBoard::CheckPossibilityToHit(Card* hittedCard)
 		if (isHittedCardTrump)
 			retValue = true;
 		else if ((cardPreset->CardSuit == hittedCardPreset->CardSuit) &&
-			(cardPreset->CardNumber < hittedCardPreset->CardDefineId))
+			(cardPreset->CardNumber < hittedCardPreset->CardNumber))
 			retValue = true;
 		else
 			retValue = false;
@@ -54,7 +62,7 @@ void CardOnBoard::MovePosition(int posX, int posY)
 	if(_hittingCard != nullptr)
 	{
 		_hittingCard->MovePositionBottom(posX + xOffset, posY + yOffset);
-	}
+	} 
 	SetWindowPos(_hitPreviewHwnd, HWND_BOTTOM, posX + xOffset, posY + yOffset, 0, 0, SWP_NOSIZE);
 }
 
@@ -65,4 +73,16 @@ void CardOnBoard::Show(bool IsShow)
 	{
 		_hittingCard->Show(IsShow);
 	}
+}
+
+void CardOnBoard::CreateHitPrevies(Card* card, bool IsShow)
+{
+	ShowWindow(_hitPreviewHwnd, IsShow);
+	_hittingCardPreview = card;
+}
+
+void CardOnBoard::DeleteHitPrevies()
+{
+	ShowWindow(_hitPreviewHwnd, false);
+	_hittingCardPreview = nullptr;
 }

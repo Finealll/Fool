@@ -7,6 +7,7 @@ struct CardPreset
 {
 	int CardDefineId;
 	int CardNumber;
+	int SystemNumber;;
 	CARD_SUIT CardSuit;
 };
 

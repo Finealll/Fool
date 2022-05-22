@@ -144,6 +144,7 @@
     <ClInclude Include="CardPreset.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="ConnectionWindow.h" />
     <ClInclude Include="Fool.h" />
     <ClInclude Include="FoolClient.h" />
     <ClInclude Include="framework.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="CardPreset.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ConnectionWindow.cpp" />
     <ClCompile Include="Fool.cpp" />
     <ClCompile Include="FoolClient.cpp" />
     <ClCompile Include="GameWindow.cpp" />
